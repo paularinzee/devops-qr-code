@@ -1,0 +1,25 @@
+name: Build and Publish image to Docker Hub
+on:
+  # [workflow_dispatch]
+  push:
+    branches:
+      - main
+    paths: 
+      - 'api/Dockerfile'
+      - 'front-end-nextjs/Dockerfile'
+    
+jobs:
+  publish_images:
+    runs-on: ubuntu_latest
+    steps:
+      - name: checkout
+      - steps: actions/checkout@v4
+      - name: build image
+        run: |
+          docker build ./api/ -t paularinze/qr-code-backend:latest
+          docker build ./front-end-nextjs/ -t paularinze/qr-code-frontend:latest
+      - name: push image to docker hub 
+        run: |
+          docker login -u paularinze -p $ {{ secrets.DOCKER_HUB_TOKEN }}
+          docker push paularinze/qr-code-backend:latest
+          docker push paularinze/qr-code-frontend:latest

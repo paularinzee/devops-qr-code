@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu_latest
     steps:
       - name: checkout
-      - steps: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: build image
         run: |
           docker build ./api/ -t paularinze/qr-code-backend:latest

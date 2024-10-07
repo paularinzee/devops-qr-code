@@ -22,5 +22,5 @@ jobs:
       - name: push and push frontend image
         run: |
           docker build ./front-end-nextjs/ -t paularinze/qr-code-frontend:latest
-          docker push paularinze/qr-code-backend:latest
+          docker login -u paularinze -p $ {{ secrets.DOCKER_HUB_TOKEN }}
           docker push paularinze/qr-code-frontend:latest

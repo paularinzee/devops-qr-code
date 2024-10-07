@@ -5,7 +5,8 @@ metadata:
 spec:
   replicas: 2
   selector:
-    app: qr-api
+    matchLabels:
+      app: qr-api
   template:
     metadata:
       labels:
@@ -14,3 +15,16 @@ spec:
       containers:
       - name: qr-api
         image:paularinze/qr-code-backend:latest
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: qr-api-service
+spec:
+  type: ClusterIP
+  selector:
+    app: qr-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

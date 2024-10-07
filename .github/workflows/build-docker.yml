@@ -33,12 +33,13 @@ jobs:
       #   run: |
       #     docker build ./front-end-nextjs/ -t paularinze/qr-code-frontend:latest
       #     docker push paularinze/qr-code-frontend:latest
-      # - name: Build and push backend image
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: ./api
-      #     push: true
-      #     tags: ${{ secrets.DOCKER_USERNAME }}/qr-code-backend:latest
+      
+      - name: Build and push backend image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./api
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/qr-code-backend:latest
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v2

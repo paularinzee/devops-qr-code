@@ -14,13 +14,21 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: build and push backend image
         run: |
           docker build ./api/ -t paularinze/qr-code-backend:latest
-          docker login -u paularinze -p $ {{ secrets.DOCKER_HUB_TOKEN }}
           docker push paularinze/qr-code-backend:latest
-      - name: push and push frontend image
+      - name:  build and push frontend image
         run: |
           docker build ./front-end-nextjs/ -t paularinze/qr-code-frontend:latest
-          docker login -u paularinze -p $ {{ secrets.DOCKER_HUB_TOKEN }}
           docker push paularinze/qr-code-frontend:latest

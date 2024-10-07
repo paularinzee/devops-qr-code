@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qr-api
+spec:
+  replicas: 2
+  selector:
+    app: qr-api
+  template:
+    metadata:
+      labels:
+        app: qr-api
+    spec:
+      containers:
+      - name: qr-api
+        image:paularinze/qr-code-backend:latest

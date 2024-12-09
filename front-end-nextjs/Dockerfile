@@ -1,28 +1,19 @@
-FROM node:20-alpine AS base
+# Use an official Node runtime as the parent image 
+FROM node:10.16.0-alpine
 
-# Set working directly in the container
-WORKDIR /app
+# Set the working directory
+WORKDIR /usr/src/app
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
-# Copy the dependencies file to the working directly
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+# Install dependencies
+COPY package.json /usr/src/app/package.json
+RUN npm install
 
-# Install any needed packages
-RUN \
-    if [ -f yarn.lock]; then yarn --frozen-lockfile; \
-    elif [ -f package-lock.json]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm $$ pnpm i --frozen-lockfile; \
-    else echo "Lockfile not found." && exit 1; \
-    fi
-
-# copy the content of the local src directory to the working directory
-COPY . .
-
-# Run the app
-RUN npm run build
-
+# Expose the port 3000
 EXPOSE 3000
 
-CMD [ "npm", "start" ]
+# Run the server
+CMD [ "npm", "run", "dev" ]
 
 # FROM node:20 As base
 

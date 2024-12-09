@@ -14,7 +14,10 @@ spec:
     spec:
       containers:
       - name: qr-api
-        image:paularinze/qr-code-backend:latest
+        image: paularinze/qr-code-backend:latest
+      ports:
+        -containerPort: 80
+
 
 apiVersion: v1
 kind: Service

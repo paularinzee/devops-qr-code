@@ -15,8 +15,8 @@ spec:
       containers:
       - name: qr-frontend
         image: paularinze/qr-code-frontend:latest
-        ports:
-        -containerPort: 3000
+      ports:
+        - containerPort: 3000
 
 
 apiVersion: v1

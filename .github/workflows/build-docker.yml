@@ -46,5 +46,5 @@ jobs:
         with:
           context: ./front-end-nextjs
           push: true
-          target: production
+          # target: production
           tags: ${{ secrets.DOCKER_USERNAME }}/qr-code-frontend:latest

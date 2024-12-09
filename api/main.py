@@ -1,13 +1,16 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import qrcode
-import boto3
+from google.cloud import storage
 import os
 from io import BytesIO
 
-# Loading Environment variable (AWS Access Key and Secret Key)
+# Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
+
+# Set Google Application Credentials from .env
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
 app = FastAPI()
 
@@ -23,13 +26,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# AWS S3 Configuration
-s3 = boto3.client(
-    's3',
-    aws_access_key_id= os.getenv("AWS_ACCESS_KEY"),
-    aws_secret_access_key= os.getenv("AWS_SECRET_KEY"))
+# GCP Storage Configuration
+bucket_name = os.getenv("GCP_BUCKET_NAME")  # Set your GCP bucket name in the environment
+if not bucket_name:
+    raise RuntimeError("GCP bucket name is not set in the environment variables.")
 
-bucket_name = 'YOUR_BUCKET_NAME' # Add your bucket name here
+# Initialize the GCP storage client
+storage_client = storage.Client()
 
 @app.post("/generate-qr/")
 async def generate_qr(url: str):
@@ -50,16 +53,19 @@ async def generate_qr(url: str):
     img.save(img_byte_arr, format='PNG')
     img_byte_arr.seek(0)
 
-    # Generate file name for S3
+    # Generate file name for GCP
     file_name = f"qr_codes/{url.split('//')[-1]}.png"
 
     try:
-        # Upload to S3
-        s3.put_object(Bucket=bucket_name, Key=file_name, Body=img_byte_arr, ContentType='image/png', ACL='public-read')
+        # Upload to GCP Cloud Storage
+        bucket = storage_client.bucket(bucket_name)
+        blob = bucket.blob(file_name)
+        blob.upload_from_file(img_byte_arr, content_type='image/png')
+        # blob.make_public()  # Make the file publicly accessible
         
-        # Generate the S3 URL
-        s3_url = f"https://{bucket_name}.s3.amazonaws.com/{file_name}"
-        return {"qr_code_url": s3_url}
+        # Generate the public URL
+        # public_url = blob.public_url
+        public_url = f"https://storage.googleapis.com/{bucket_name}/{file_name}"
+        return {"qr_code_url": public_url}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
+        raise HTTPException(status_code=500, detail=f"Failed to upload the QR code to GCP: {e}")

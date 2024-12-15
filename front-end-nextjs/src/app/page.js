@@ -10,8 +10,8 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`/api/generate-qr/?url=${url}`);
-      // const response = await axios.post(`/api/generate-qr/?url=${encodeURIComponent(url)}`);
+      // const response = await axios.post(`/api/generate-qr/?url=${url}`);
+      const response = await axios.post(`/api/generate-qr/?url=${encodeURIComponent(url)}`);
       // const response = await axios.post(`http://qr-api-service/generate-qr/?url=${url}`);
       setQrCodeUrl(response.data.qr_code_url);
     } catch (error) {

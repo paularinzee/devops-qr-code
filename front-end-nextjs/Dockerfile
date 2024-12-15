@@ -1,35 +1,44 @@
-# Use an official Node runtime as the parent image 
-FROM node:10.16.0-alpine
+# Build stage
+FROM node:18-alpine AS base
 
-# Set the working directory
-WORKDIR /usr/src/app
-ENV PATH /usr/src/app/node_modules/.bin:$PATH
+WORKDIR /app
 
-# Install dependencies
-COPY package.json /usr/src/app/package.json
+COPY package*.json ./
+
 RUN npm install
 
-# Expose the port 3000
+COPY . .
+
+COPY .env .env
+
+RUN mkdir .next
+
+# Run Stage
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Define a custom UID
+ARG UID=10001
+
+# Create a non-root user with the specified UID
+RUN adduser \
+    --disabled-password \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid "${UID}" \
+    nextjs-user
+
+# Create the /app directory and set ownership
+#RUN mkdir -p /app && chown nextjs-user:nextjs-user /app
+
+# Copy built application from the build stage
+COPY --from=base --chown=nextjs-user:nextjs-user /app /app
+# Switch to the non-root user
+USER nextjs-user
+
 EXPOSE 3000
 
-# Run the server
-CMD [ "npm", "run", "dev" ]
-
-# FROM node:20 As base
-
-# WORKDIR /usr/src/app
-
-# COPY package.json package.json
-# RUN npm install
-
-# COPY . .
-
-# FROM base As developmet
-# EXPOSE 3000
-# CMD [ "npm" , "run"  , "dev"]
-
-
-# FROM base As production
-# EXPOSE 3000
-# RUN npm run build
-# CMD ["npm", "start"]
+# Start the application
+CMD ["npm", "run", "dev"]

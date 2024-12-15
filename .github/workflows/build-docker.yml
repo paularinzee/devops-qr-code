@@ -1,18 +1,16 @@
-name: Build and Publish image to Docker Hub
+name: Deploy to Kubernetes
+
 on:
-  [workflow_dispatch]
-  # push:
-  #   branches:
-  #     - main
-  #   paths: 
-  #     - 'api/Dockerfile'
-  #     - 'front-end-nextjs/Dockerfile'
-    
+  push:
+    branches:
+      - main
+
 jobs:
-  publish_images:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up Docker Buildx
@@ -37,5 +35,4 @@ jobs:
           context: ./front-end-nextjs
           push: true
           target: production
-          # target: production
           tags: ${{ secrets.DOCKER_USERNAME }}/qr-code-frontend:latest

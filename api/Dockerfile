@@ -1,16 +1,14 @@
 FROM python:3.9-slim
 
+WORKDIR /usr/src/app
+
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-
-WORKDIR /usr/src/app
 
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-
-COPY .env .env
 
 EXPOSE 8000
 

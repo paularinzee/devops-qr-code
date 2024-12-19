@@ -10,8 +10,8 @@ export async function POST(request) {
   }
 
   try {
-    const response = await axios.post(`http://qr-api-service/generate-qr/?url=${encodeURIComponent(url)}`);
-    // const response = await axios.post(`http://localhost:8000/generate-qr/?url=${url}`);
+    // const response = await axios.post(`http://qr-api-service/generate-qr/?url=${encodeURIComponent(url)}`);
+    const response = await axios.post(`http://localhost:8000/generate-qr/?url=${url}`);
 
     return NextResponse.json(response.data);
   } catch (error) {

@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Set Google Application Credentials from .env
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/etc/gcp/credentials.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/etc/gcp/credentials.json"
 
 app = FastAPI()
 

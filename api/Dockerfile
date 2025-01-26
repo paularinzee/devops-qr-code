@@ -8,7 +8,17 @@ ENV PYTHONUNBUFFERED=1
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+
 COPY . .
+# Copy Google Cloud credentials
+ARG GOOGLE_APPLICATION_CREDENTIALS
+COPY ${GOOGLE_APPLICATION_CREDENTIALS} /etc/gcp/credentials.json
+
+# Set environment variable to point to the credentials
+ENV GOOGLE_APPLICATION_CREDENTIALS=/etc/gcp/credentials.json
+
+# Copy the .env file (for GCP_BUCKET_NAME)
+COPY .env /app/.env
 
 EXPOSE 8000
 

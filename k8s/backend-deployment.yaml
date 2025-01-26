@@ -19,19 +19,19 @@ spec:
         image: paularinze/qr-code-backend:latest # Replace with your image
         ports:
         - containerPort: 80
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/gcp/credentials.json
-        volumeMounts:
-        - name: gcp-credentials
-          mountPath: /etc/gcp
-          readOnly: true
-      volumes:
-      - name: gcp-credentials
-        secret:
-          secretName: gcp-credentials
-          items:
-          - key: GOOGLE_APPLICATION_CREDENTIALS
-            path: credentials.json
+      #   env:
+      #   - name: GOOGLE_APPLICATION_CREDENTIALS
+      #     value: /etc/gcp/credentials.json
+      #   volumeMounts:
+      #   - name: gcp-credentials
+      #     mountPath: /etc/gcp
+      #     readOnly: true
+      # volumes:
+      # - name: gcp-credentials
+      #   secret:
+      #     secretName: gcp-credentials
+      #     items:
+      #     - key: GOOGLE_APPLICATION_CREDENTIALS
+      #       path: credentials.json
 
         

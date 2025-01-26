@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: qr-api
-  labels:
-    app: qr-api
 spec:
   replicas: 1
   selector:
@@ -15,23 +13,20 @@ spec:
         app: qr-api
     spec:
       containers:
-      - name: qr-api
-        image: paularinze/qr-code-backend:latest # Replace with your image
-        ports:
-        - containerPort: 80
-      #   env:
-      #   - name: GOOGLE_APPLICATION_CREDENTIALS
-      #     value: /etc/gcp/credentials.json
-      #   volumeMounts:
-      #   - name: gcp-credentials
-      #     mountPath: /etc/gcp
-      #     readOnly: true
-      # volumes:
-      # - name: gcp-credentials
-      #   secret:
-      #     secretName: gcp-credentials
-      #     items:
-      #     - key: GOOGLE_APPLICATION_CREDENTIALS
-      #       path: credentials.json
-
-        
+        - name: qr-api
+          image: paularinze/qr-code-backend:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: GCP_BUCKET_NAME
+              value: "mrp-qrcode-generator"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcp/GOOGLE_APPLICATION_CREDENTIALS"
+          volumeMounts:
+            - name: gcp-credentials
+              mountPath: /secrets/gcp
+              readOnly: true
+      volumes:
+        - name: gcp-credentials
+          secret:
+            secretName: gcp-credentials

@@ -17,9 +17,6 @@ COPY ${GOOGLE_APPLICATION_CREDENTIALS} /etc/gcp/credentials.json
 # Set environment variable to point to the credentials
 ENV GOOGLE_APPLICATION_CREDENTIALS=/etc/gcp/credentials.json
 
-# Copy the .env file (for GCP_BUCKET_NAME)
-COPY .env /app/.env
-
 EXPOSE 8000
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
